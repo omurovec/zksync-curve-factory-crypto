@@ -1,4 +1,4 @@
-# @version 0.2.4
+# @version 0.3.3
 # (c) Curve.Fi, 2020
 # Pool for DAI/USDC/USDT
 
@@ -73,14 +73,14 @@ event StopRampA:
 
 
 # This can (and needs to) be changed at compile time
-N_COINS: constant(int128) = 3  # <- change
+N_COINS: constant(uint256) = 3  # <- change
 
 FEE_DENOMINATOR: constant(uint256) = 10 ** 10
 LENDING_PRECISION: constant(uint256) = 10 ** 18
 PRECISION: constant(uint256) = 10 ** 18  # The precision to convert to
 PRECISION_MUL: constant(uint256[N_COINS]) = [1, 1000000000000, 1000000000000]
 RATES: constant(uint256[N_COINS]) = [1000000000000000000, 1000000000000000000000000000000, 1000000000000000000000000000000]
-FEE_INDEX: constant(int128) = 2  # Which coin may potentially have fees (USDT)
+FEE_INDEX: constant(uint256) = 2  # Which coin may potentially have fees (USDT)
 
 MAX_ADMIN_FEE: constant(uint256) = 10 * 10 ** 9
 MAX_FEE: constant(uint256) = 5 * 10 ** 9
@@ -308,7 +308,7 @@ def add_liquidity(amounts: uint256[N_COINS], min_mint_amount: uint256):
             if len(_response) > 0:
                 assert convert(_response, bool)  # dev: failed transfer
 
-            if i == FEE_INDEX:
+            if convert(i, uint256) == FEE_INDEX:
                 in_amount = ERC20(in_coin).balanceOf(self) - in_amount
 
         new_balances[i] = old_balances[i] + in_amount
@@ -358,11 +358,11 @@ def get_y(i: int128, j: int128, x: uint256, xp_: uint256[N_COINS]) -> uint256:
 
     assert i != j       # dev: same coin
     assert j >= 0       # dev: j below zero
-    assert j < N_COINS  # dev: j above N_COINS
+    assert convert(j, uint256) < N_COINS  # dev: j above N_COINS
 
     # should be unreachable, but good for safety
     assert i >= 0
-    assert i < N_COINS
+    assert convert(i, uint256) < N_COINS
 
     amp: uint256 = self._A()
     D: uint256 = self.get_D(xp_, amp)
@@ -372,9 +372,9 @@ def get_y(i: int128, j: int128, x: uint256, xp_: uint256[N_COINS]) -> uint256:
 
     _x: uint256 = 0
     for _i in range(N_COINS):
-        if _i == i:
+        if _i == convert(i, uint256):
             _x = x
-        elif _i != j:
+        elif _i != convert(j, uint256):
             _x = xp_[_i]
         else:
             continue
@@ -439,7 +439,7 @@ def exchange(i: int128, j: int128, dx: uint256, min_dy: uint256):
     dx_w_fee: uint256 = dx
     input_coin: address = self.coins[i]
 
-    if i == FEE_INDEX:
+    if convert(i, uint256) == FEE_INDEX:
         dx_w_fee = ERC20(input_coin).balanceOf(self)
 
     # "safeTransferFrom" which works for ERC20s which return bool or not
@@ -456,7 +456,7 @@ def exchange(i: int128, j: int128, dx: uint256, min_dy: uint256):
     if len(_response) > 0:
         assert convert(_response, bool)  # dev: failed transfer
 
-    if i == FEE_INDEX:
+    if convert(i, uint256) == FEE_INDEX:
         dx_w_fee = ERC20(input_coin).balanceOf(self) - dx_w_fee
 
     x: uint256 = xp[i] + dx_w_fee * rates[i] / PRECISION
@@ -594,7 +594,7 @@ def get_y_D(A_: uint256, i: int128, xp: uint256[N_COINS], D: uint256) -> uint256
     # x in the input is converted to the same price/precision
 
     assert i >= 0  # dev: i below zero
-    assert i < N_COINS  # dev: i above N_COINS
+    assert convert(i, uint256) < N_COINS  # dev: i above N_COINS
 
     c: uint256 = D
     S_: uint256 = 0
@@ -602,7 +602,7 @@ def get_y_D(A_: uint256, i: int128, xp: uint256[N_COINS], D: uint256) -> uint256
 
     _x: uint256 = 0
     for _i in range(N_COINS):
-        if _i != i:
+        if _i != convert(i, uint256):
             _x = xp[_i]
         else:
             continue
@@ -647,7 +647,7 @@ def _calc_withdraw_one_coin(_token_amount: uint256, i: int128) -> (uint256, uint
 
     for j in range(N_COINS):
         dx_expected: uint256 = 0
-        if j == i:
+        if j == convert(i, uint256):
             dx_expected = xp[j] * D1 / D0 - new_y
         else:
             dx_expected = xp[j] - xp[j] * D1 / D0

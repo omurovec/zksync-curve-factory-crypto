@@ -1,5 +1,19 @@
 {
   "scripts": {
-    "preinstall": "npm i -g ganache-cli@6.12.1"
+    "preinstall": "npm i -g ganache-cli@6.12.1",
+    "compile-zksync": "hardhat --config zksync.hardhat.config.ts compile",
+    "deploy-zksync": "hardhat --config zksync.hardhat.config.ts deploy-zksync --script deploy.ts",
+    "scenario-zksync": "hardhat --config zksync.hardhat.config.ts run scripts/scenario_zksync.ts"
+  },
+  "devDependencies": {
+    "@matterlabs/hardhat-zksync-deploy": "^0.5.2",
+    "@matterlabs/hardhat-zksync-vyper": "^0.1.5",
+    "@nomiclabs/hardhat-vyper": "^3.0.1",
+    "dotenv": "^16.0.3",
+    "ethers": "^5.7.2",
+    "hardhat": "^2.12.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.4",
+    "zksync-web3": "^0.11.1"
   }
 }

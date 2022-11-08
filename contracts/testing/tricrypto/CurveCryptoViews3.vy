@@ -1,4 +1,4 @@
-# @version 0.3.1
+# @version 0.3.3
 # (c) Curve.Fi, 2021
 
 # This contract contains view-only external methods which can be gas-inefficient
@@ -21,7 +21,7 @@ interface Math:
     def newton_D(ANN: uint256, gamma: uint256, x_unsorted: uint256[N_COINS]) -> uint256: view
     def newton_y(ANN: uint256, gamma: uint256, x: uint256[N_COINS], D: uint256, i: uint256) -> uint256: view
 
-N_COINS: constant(int128) = 3  # <- change
+N_COINS: constant(uint256) = 3  # <- change
 PRECISION: constant(uint256) = 10 ** 18  # The precision to convert to
 PRECISIONS: immutable(uint256[N_COINS])
 

@@ -1,4 +1,4 @@
-# @version 0.3.1
+# @version 0.3.3
 # (c) Curve.Fi, 2021
 # Pool for USDT/BTC/ETH or similar
 
@@ -102,7 +102,7 @@ event ClaimAdminFee:
     tokens: uint256
 
 
-N_COINS: constant(int128) = 3  # <- change
+N_COINS: constant(uint256) = 3  # <- change
 PRECISION: constant(uint256) = 10 ** 18  # The precision to convert to
 A_MULTIPLIER: constant(uint256) = 10000
 

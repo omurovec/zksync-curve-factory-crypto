@@ -3,3 +3,8 @@
 __pycache__
 /node_modules
 /package-lock.json
+.env
+/artifacts-zk
+/cache-zk
+yarn-error.log
+.DS_Store
