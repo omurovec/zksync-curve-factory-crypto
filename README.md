@@ -77,5 +77,5 @@ yarn deploy-zksync
 5. Deploy a pool, mint tokens, add liquidity, and test exchange
 
 ```shell
-yarn deploy-zksync
+yarn scenario-zksync
 ```
